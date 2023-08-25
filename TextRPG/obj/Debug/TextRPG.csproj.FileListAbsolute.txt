@@ -1,7 +1,0 @@
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\bin\Debug\Assignment.exe.config
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\bin\Debug\Assignment.exe
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\bin\Debug\Assignment.pdb
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\obj\Debug\TextRPG.csproj.AssemblyReference.cache
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\obj\Debug\TextRPG.csproj.CoreCompileInputs.cache
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\obj\Debug\Assignment.exe
-C:\Users\Hyeonji Lee\Desktop\Sparta\Assignment\Assignment\Assignment\obj\Debug\Assignment.pdb
