@@ -81,6 +81,20 @@ class Warrior : ICharacter
         {
             Health = 0;
         }
+
+        Console.SetCursorPosition(95, 36);
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"-{damage}");
+        Thread.Sleep(100);
+        Console.SetCursorPosition(95, 36);
+        Console.WriteLine($" -{damage}");
+        Thread.Sleep(100);
+        Console.SetCursorPosition(95, 36);
+        Console.WriteLine($"  -{damage}");
+        Thread.Sleep(1000);
+        Console.SetCursorPosition(95, 36);
+        Console.WriteLine("           ");
+        Console.ResetColor();
     }
 
     public void DrawImage()
@@ -167,6 +181,20 @@ class Monster : ICharacter
         {
             Health = 0;
         }
+
+        Console.SetCursorPosition(35, 36);
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"-{damage}");
+        Thread.Sleep(100);
+        Console.SetCursorPosition(35, 36);
+        Console.WriteLine($" -{damage}");
+        Thread.Sleep(100);
+        Console.SetCursorPosition(35, 36);
+        Console.WriteLine($"  -{damage}");
+        Thread.Sleep(1000);
+        Console.SetCursorPosition(35, 36);
+        Console.WriteLine("           ");
+        Console.ResetColor();
     }
 
     public void DrawImage()
@@ -279,6 +307,8 @@ class Stage
     {
         monster.DrawImage();
         warrior.DrawImage();
+        DrawStatus();
+
 
         while (!warrior.IsDead && !monster.IsDead)
         {
@@ -292,6 +322,7 @@ class Stage
             int input = TextRPG.CheckValidInput(0, 3);
             PlayerAttack(input);
         }
+
     }
 
     void Fight()
@@ -317,13 +348,14 @@ class Stage
             AttackDamage = (monster.Attack * prob / 100);
         }
 
-        warrior.TakeDagame(AttackDamage);
         DrawHit(warrior);
+        warrior.TakeDagame(AttackDamage);
         DrawStatus();
 
         if (warrior.Health <= 0) warrior.IsDead = true;
 
         ++TurnCount;
+
     }
 
     static void PlayerAttack(int input)
@@ -373,9 +405,8 @@ class Stage
                     break;
                 }
         }
-
-        monster.TakeDagame(AttackDamage);
         DrawHit(monster);
+        monster.TakeDagame(AttackDamage);
         DrawStatus();
 
         if (monster.Health <= 0) monster.IsDead = true;
@@ -398,8 +429,9 @@ class Stage
         Console.BackgroundColor = ConsoleColor.Gray;
         Console.WriteLine("                              ");
         Console.SetCursorPosition(10, 38);
-        Console.BackgroundColor = ConsoleColor.Red;
+        Console.BackgroundColor = ConsoleColor.Green;
         string monHealth = new string(' ', (int)((monster.Health * 30 / monster.MaxHealth)));
+        if (monHealth.Length <= 6) Console.BackgroundColor = ConsoleColor.Red;
         Console.WriteLine(monHealth);
         Console.ResetColor();
 
@@ -410,8 +442,9 @@ class Stage
         Console.BackgroundColor = ConsoleColor.Gray;
         Console.WriteLine("                              ");
         Console.SetCursorPosition(90, 38);
-        Console.BackgroundColor = ConsoleColor.Red;
+        Console.BackgroundColor = ConsoleColor.Green;
         string plHealth = new string(' ', (int)((warrior.Health * 30 / warrior.MaxHealth )));
+        if (plHealth.Length <= 6) Console.BackgroundColor = ConsoleColor.Red;
         Console.WriteLine(plHealth);
         Console.ResetColor();
 
@@ -436,6 +469,15 @@ class Stage
         Console.WriteLine("|");
         Console.SetCursorPosition(105, 46);
         Console.Write("|    전투 스킬 포인트");
+
+        Console.SetCursorPosition(130, Console.CursorTop);
+        int count = 1;
+        for (int i = 0; i < 5; i++)
+        {
+            if (count <= SkillPoint) Console.Write("● ");
+            else Console.Write("○ ");
+            ++count;
+        }
 
         Console.SetCursorPosition(5, 42);
         string line = new string('-', 140);
@@ -550,6 +592,7 @@ class TextRPG
         Console.ResetColor();
     }
 
+
     public static void GetInput()
     {
         Console.BackgroundColor = ConsoleColor.DarkCyan;
@@ -560,5 +603,3 @@ class TextRPG
         Console.ResetColor();
     }
 }
-
-
