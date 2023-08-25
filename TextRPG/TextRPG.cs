@@ -255,9 +255,8 @@ class Stage
     public static int TurnCount { get; set; }
 
 
-    public Stage(int stageLevel)
+    public Stage(int stageLevel, Warrior player)
     {
-        warrior = new Warrior();
         Start();
         StageLevel = stageLevel;
         if (StageLevel == 1) monster = new Goblin();
@@ -265,16 +264,19 @@ class Stage
         SkillPoint = 3;
         UltimateGage = 0;
         TurnCount = 0;
-
+        warrior = player;
     }
 
     void Start()
     {
 
-        //while (!warrior.IsDead && !monster.IsDead)
-        //{
+        while (!warrior.IsDead && !monster.IsDead)
+        {
+            MonsterAttack();
 
-        //}
+            int input = TextRPG.CheckValidInput(1, 3);
+            PlayerAttack(input);
+        }
     }
 
     void Fight()
@@ -282,7 +284,7 @@ class Stage
 
     }
 
-    static void MonsterAttack(Monster monster, Warrior warrior)
+    static void MonsterAttack()
     {
         Random random = new Random();
         int prob;
@@ -292,15 +294,21 @@ class Stage
         {
             prob = random.Next(10, 51);
             AttackDamage = (monster.Attack * prob / 100);
+            TurnCount = 0;
         }
         else
         {
-            prob = random.Next(10, 51);
+            prob = random.Next(70, 110);
             AttackDamage = (monster.Attack * prob / 100);
         }
+
+        warrior.TakeDagame(AttackDamage);
+        if (warrior.Health <= 0) warrior.IsDead = true;
+
+        ++TurnCount;
     }
 
-    static void PlayerAttack(int input, Warrior warrior, Monster monster)
+    static void PlayerAttack(int input)
     {
         Random random = new Random();
         int prob;
@@ -311,6 +319,9 @@ class Stage
                 prob = random.Next(20, 31); 
                 AttackDamage = (int)(warrior.Attack * prob / 100);
                 Console.WriteLine("일반 공격!");
+                ++SkillPoint;
+                ++UltimateGage;
+                MaxMinManager();
                 break;
             case 2:
                 if (SkillPoint != 0)
@@ -318,6 +329,9 @@ class Stage
                     prob = random.Next(30, 41);
                     AttackDamage = (int)(warrior.Attack * prob / 100);
                     Console.WriteLine("전투 스킬 발동!");
+                    --SkillPoint;
+                    UltimateGage += 3;
+                    MaxMinManager();
                     break;
                 }
                 else
@@ -332,6 +346,7 @@ class Stage
                     prob = random.Next(90, 120);
                     AttackDamage = (int)(warrior.Attack * prob / 100);
                     Console.WriteLine("필살기");
+                    UltimateGage = 0;
                     break;
                 }
                 else
@@ -342,8 +357,22 @@ class Stage
         }
 
         monster.TakeDagame(AttackDamage);
+        if (monster.Health <= 0) monster.IsDead = true;
         
     }
+
+    static void MaxMinManager()
+    {
+        if (SkillPoint <= 0) SkillPoint = 0;
+        else if (SkillPoint >= 5) SkillPoint = 5;
+
+        if (UltimateGage >= 10) UltimateGage = 10;
+    }
+
+    //static void ShowOption()
+    //{
+    //    Console.SetCursorPosition()
+    //}
 }
 
 class TextRPG
@@ -371,9 +400,21 @@ class TextRPG
         Console.SetWindowSize(150, 60);
     }
 
-    static void CheckValidInput( )
+    public static int CheckValidInput(int min, int max)
     {
-        
+        while (true)
+        {
+            string input = Console.ReadLine();
+            Console.ResetColor();
+
+            bool parseSuccess = int.TryParse(input, out var ret);
+            if (parseSuccess)
+            {
+                if (ret >= min && ret <= max)
+                    return ret;
+            }
+
+        }
     }
 
     static void DrawHit(ICharacter character)
