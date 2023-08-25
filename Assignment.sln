@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextRPG", "Assignment\TextRPG.csproj", "{64F99BBB-EFD1-45F8-8662-0AF9DA61A8F0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TIcTacToe", "TIcTacToe\TIcTacToe.csproj", "{55F230BA-B1AA-44CB-9036-9976FB3198EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextRPG", "TextRPG\TextRPG.csproj", "{B84431BB-BF8D-4335-815A-E3A38FB29D2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64F99BBB-EFD1-45F8-8662-0AF9DA61A8F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64F99BBB-EFD1-45F8-8662-0AF9DA61A8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64F99BBB-EFD1-45F8-8662-0AF9DA61A8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64F99BBB-EFD1-45F8-8662-0AF9DA61A8F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55F230BA-B1AA-44CB-9036-9976FB3198EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55F230BA-B1AA-44CB-9036-9976FB3198EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55F230BA-B1AA-44CB-9036-9976FB3198EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55F230BA-B1AA-44CB-9036-9976FB3198EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B84431BB-BF8D-4335-815A-E3A38FB29D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B84431BB-BF8D-4335-815A-E3A38FB29D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B84431BB-BF8D-4335-815A-E3A38FB29D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B84431BB-BF8D-4335-815A-E3A38FB29D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
