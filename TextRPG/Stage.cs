@@ -9,17 +9,16 @@ namespace TextRPG
 {
     class Stage
     {
-        public static Warrior warrior;
-        public static Monster monster;
-        public HealthPotion healthPotion = new HealthPotion();
-        public StrengthPotion strengthPotion = new StrengthPotion();
+        public static ICharacter warrior;
+        public static ICharacter monster;
+
         public int StageLevel { get; set; }
         public static int SkillPoint { get; set; }
         public static int UltimateGage { get; set; }
         public static int TurnCount { get; set; }
 
 
-        public Stage(int stageLevel, Warrior player)
+        public Stage(int stageLevel, ICharacter player)
         {
             StageLevel = stageLevel;
             if (StageLevel == 1) monster = new Goblin();
@@ -33,37 +32,94 @@ namespace TextRPG
 
         void Start()
         {
+            Console.Clear();
+
+
+            // 타이틀 그리기
+
+            string line = new string('-', 48);
+            Console.SetCursorPosition(6, 2);
+            Console.WriteLine(line);
+
+            for (int i = 0; i < 5; i++)
+            {
+                Console.SetCursorPosition(5, Console.CursorTop);
+                Console.WriteLine("|                                                |");
+            }
+            Console.SetCursorPosition(6, Console.CursorTop);
+            Console.WriteLine(line);
+
+            string title;
+
+            if (this.StageLevel == 1) title = " _____ _____ _____ _____ _____    ___   \r\n|   __|_   _|  _  |   __|   __|  |_  |  \r\n|__   | | | |     |  |  |   __|   _| |_ \r\n|_____| |_| |__|__|_____|_____|  |_____|";
+            else title = " _____ _____ _____ _____ _____    ___ \r\n|   __|_   _|  _  |   __|   __|  |_  |\r\n|__   | | | |     |  |  |   __|  |  _|\r\n|_____| |_| |__|__|_____|_____|  |___|";
+            string[] titleImage = title.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            Console.SetCursorPosition(10, 3);
+            foreach (string t in titleImage)
+            {
+                Console.SetCursorPosition(10, Console.CursorTop);
+                Console.WriteLine(t);
+            }
+
+            // ------------------------------------------------
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.SetCursorPosition(133, 56);
+            Console.WriteLine("[0] 나가기");
+            Console.ResetColor();
+
             monster.DrawImage();
             warrior.DrawImage();
             DrawStatus();
 
 
+
+
             while (!warrior.IsDead && !monster.IsDead)
             {
-                TextRPG.InputBox();
-                Thread.Sleep(1000);
-                MonsterAttack();
 
+                Thread.Sleep(1000);
+
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.SetCursorPosition(5, 10);
+                Console.Write("▶▶▶");
+                Console.SetCursorPosition(80, Console.CursorTop);
+                Console.Write("        ");
+                Thread.Sleep(500);
+                Console.ResetColor();
+
+                MonsterAttack();
                 Thread.Sleep(500);
 
+                if (warrior.IsDead || monster.IsDead) break;
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.SetCursorPosition(5, 10);
+                Console.Write("        ");
+                Console.SetCursorPosition(80, Console.CursorTop);
+                Console.Write("▶▶▶");
+                Console.ResetColor();
+
                 ShowOption();
+                TextRPG.GetInput();
                 int input = TextRPG.CheckValidInput(0, 3);
+
+                if (input == 0)
+                {
+                    Intro.DisplayHome();
+                    return;
+                }
+
                 PlayerAttack(input);
             }
 
-        }
-
-        void Fight()
-        {
+            DisplayResult();
 
         }
 
         static void MonsterAttack()
         {
-            Console.SetCursorPosition(5, 10);
-            Console.Write("▶▶▶");
-            Console.SetCursorPosition(90, Console.CursorTop);
-            Console.Write("        ");
             Random random = new Random();
             int prob;
             int AttackDamage = 0;
@@ -98,6 +154,51 @@ namespace TextRPG
 
         }
 
+        static void DisplayResult()
+        {
+            Console.Clear();
+
+            string title;
+
+            if (warrior.IsDead)
+            {
+                title = "\r\n$$\\     $$\\  $$$$$$\\  $$\\   $$\\       $$\\       $$$$$$\\   $$$$$$\\  $$$$$$$$\\ \r\n\\$$\\   $$  |$$  __$$\\ $$ |  $$ |      $$ |     $$  __$$\\ $$  __$$\\ $$  _____|\r\n \\$$\\ $$  / $$ /  $$ |$$ |  $$ |      $$ |     $$ /  $$ |$$ /  \\__|$$ |      \r\n  \\$$$$  /  $$ |  $$ |$$ |  $$ |      $$ |     $$ |  $$ |\\$$$$$$\\  $$$$$\\    \r\n   \\$$  /   $$ |  $$ |$$ |  $$ |      $$ |     $$ |  $$ | \\____$$\\ $$  __|   \r\n    $$ |    $$ |  $$ |$$ |  $$ |      $$ |     $$ |  $$ |$$\\   $$ |$$ |      \r\n    $$ |     $$$$$$  |\\$$$$$$  |      $$$$$$$$\\ $$$$$$  |\\$$$$$$  |$$$$$$$$\\ \r\n    \\__|     \\______/  \\______/       \\________|\\______/  \\______/ \\________|\r\n                                                                             \r\n                                                                             \r\n                                                                             \r\n";
+            }
+            else
+            {
+                title = "\r\n$$\\     $$\\  $$$$$$\\  $$\\   $$\\       $$\\      $$\\ $$$$$$\\ $$\\   $$\\       $$\\ \r\n\\$$\\   $$  |$$  __$$\\ $$ |  $$ |      $$ | $\\  $$ |\\_$$  _|$$$\\  $$ |      $$ |\r\n \\$$\\ $$  / $$ /  $$ |$$ |  $$ |      $$ |$$$\\ $$ |  $$ |  $$$$\\ $$ |      $$ |\r\n  \\$$$$  /  $$ |  $$ |$$ |  $$ |      $$ $$ $$\\$$ |  $$ |  $$ $$\\$$ |      $$ |\r\n   \\$$  /   $$ |  $$ |$$ |  $$ |      $$$$  _$$$$ |  $$ |  $$ \\$$$$ |      \\__|\r\n    $$ |    $$ |  $$ |$$ |  $$ |      $$$  / \\$$$ |  $$ |  $$ |\\$$$ |          \r\n    $$ |     $$$$$$  |\\$$$$$$  |      $$  /   \\$$ |$$$$$$\\ $$ | \\$$ |      $$\\ \r\n    \\__|     \\______/  \\______/       \\__/     \\__|\\______|\\__|  \\__|      \\__|\r\n                                                                               \r\n                                                                               \r\n                                                                               \r\n";
+
+                // 승리 보상 - 포션 지급
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(63, 33);
+                if (!TextRPG.healthPotion)
+                {
+                    Console.WriteLine("+ 체력 포션 획득");
+                    Console.WriteLine();
+                }
+
+                Console.SetCursorPosition(63, Console.CursorTop);
+                if (!TextRPG.strengthPotion) Console.WriteLine("+ 공격력 포션 획득");
+                Console.ResetColor();
+
+                TextRPG.healthPotion = true;
+                TextRPG.strengthPotion = true;
+            }
+
+
+            string[] titleImage = title.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            Console.SetCursorPosition(35, 18);
+            foreach (string t in titleImage)
+            {
+                Console.SetCursorPosition(35, Console.CursorTop);
+                Console.WriteLine(t);
+            }
+
+            Thread.Sleep(5000);
+        }
+
         static void PlayerAttack(int input)
         {
             Random random = new Random();
@@ -113,6 +214,7 @@ namespace TextRPG
                     ++UltimateGage;
                     MaxMinManager();
                     break;
+
                 case 2:
                     if (SkillPoint != 0)
                     {
@@ -126,10 +228,36 @@ namespace TextRPG
                     }
                     else
                     {
-                        //Console.WriteLine("전투 스킬 포인트가 부족합니다.");
+                        string message1 = "잘못된 입력입니다.";
+                        string message2 = "전투 스킬 포인트가 부족합니다.";
 
-                        break;
+                        TextRPG.Warning(message2);
+
+                        TextRPG.GetInput();
+
+                        while (true)
+                        {
+                            string newInput = Console.ReadLine();
+                            Console.ResetColor();
+                            bool parseSuccess = int.TryParse(newInput, out var ret);
+                            if (parseSuccess)
+                            {
+                                if (ret >= 0 && ret <= 3 && ret != 2)
+                                {
+                                    PlayerAttack(ret);
+                                    return;
+                                }
+
+                            }
+
+                            if (ret == 2) TextRPG.Warning(message2);
+                            else TextRPG.Warning(message1);
+
+                            TextRPG.GetInput();
+                        }
                     }
+                    break;
+
                 case 3:
                     if (UltimateGage == 10)
                     {
@@ -141,8 +269,33 @@ namespace TextRPG
                     }
                     else
                     {
-                        //Console.WriteLine("필살기 게이지가 충분하지 않습니다.");
-                        break;
+                        string message1 = "잘못된 입력입니다.";
+                        string message2 = "필살기 게이지가 충분하지 않습니다.";
+
+                        TextRPG.Warning(message2);
+
+                        TextRPG.GetInput();
+
+                        while (true)
+                        {
+                            string newInput = Console.ReadLine();
+                            Console.ResetColor();
+                            bool parseSuccess = int.TryParse(newInput, out var ret);
+                            if (parseSuccess)
+                            {
+                                if (ret >= 0 && ret <= 2)
+                                {
+                                    PlayerAttack(ret);
+                                    return;
+                                }
+
+                            }
+
+                            if (ret == 3) TextRPG.Warning(message2);
+                            else TextRPG.Warning(message1);
+
+                            TextRPG.GetInput();
+                        }
                     }
             }
             DrawHit(monster);
@@ -165,6 +318,9 @@ namespace TextRPG
 
         static void DrawStatus()
         {
+            TextRPG.InputBox();
+            ShowOption();
+
             // 몬스터 HP 
             Console.SetCursorPosition(10, 38);
             Console.BackgroundColor = ConsoleColor.Gray;
@@ -177,7 +333,7 @@ namespace TextRPG
             Console.ResetColor();
 
             Console.SetCursorPosition(45, 38);
-            Console.Write($"( {monster.Health} / {monster.MaxHealth} )");
+            Console.Write($"( {monster.Health} / {monster.MaxHealth} )        ");
 
 
             // 플레이어 HP
@@ -192,12 +348,12 @@ namespace TextRPG
             Console.ResetColor();
 
             Console.SetCursorPosition(125, 38);
-            Console.Write($"( {warrior.Health} / {warrior.MaxHealth} )");
+            Console.Write($"( {warrior.Health} / {warrior.MaxHealth} )        ");
 
 
             // 필살기 게이지 & 전투 스킬 포인트
-            Console.SetCursorPosition(105, 44);
-            Console.Write("|    필살기 게이지");
+            Console.SetCursorPosition(110, 44);
+            Console.Write("필살기 게이지");
 
             Console.SetCursorPosition(130, 44);
             Console.BackgroundColor = ConsoleColor.Gray;
@@ -208,12 +364,8 @@ namespace TextRPG
             Console.Write(ultimate);
             Console.ResetColor();
 
-            Console.SetCursorPosition(105, 43);
-            Console.WriteLine("|");
-            Console.SetCursorPosition(105, 45);
-            Console.WriteLine("|");
-            Console.SetCursorPosition(105, 46);
-            Console.Write("|    전투 스킬 포인트");
+            Console.SetCursorPosition(110, 46);
+            Console.Write("전투 스킬 포인트");
 
             Console.SetCursorPosition(130, Console.CursorTop);
             int count = 1;
@@ -224,21 +376,6 @@ namespace TextRPG
                 ++count;
             }
 
-            // 박스 그리기
-            Console.SetCursorPosition(5, 42);
-            string line = new string('-', 140);
-            Console.WriteLine(line);
-
-            Console.SetCursorPosition(105, 43);
-            Console.WriteLine("|");
-            Console.SetCursorPosition(105, 45);
-            Console.WriteLine("|");
-            Console.SetCursorPosition(105, 47);
-            Console.WriteLine("|");
-
-            Console.SetCursorPosition(5, 48);
-            Console.WriteLine(line);
-
             // HP 감소 표시 초기화
 
             Thread.Sleep(1000);
@@ -246,20 +383,39 @@ namespace TextRPG
             Console.WriteLine("           ");
             Console.SetCursorPosition(95, 36);
             Console.WriteLine("           ");
+
+            TextRPG.InputBox();
         }
 
 
         static void ShowOption()
         {
-            Console.SetCursorPosition(5, 42);
-            string line = new string('-', 140);
-            Console.WriteLine(line);
-            Console.SetCursorPosition(20, 44);
-            Console.WriteLine("[1]                             [2]                             [3]");
-            Console.SetCursorPosition(17, 46);
-            Console.WriteLine("일반 공격                       전투 스킬                         필살기");
+            TextRPG.DrawOptionBox();
 
-            TextRPG.GetInput();
+            Console.SetCursorPosition(20, 44);
+            Console.WriteLine("[1]");
+            Console.SetCursorPosition(17, 46);
+            Console.WriteLine("일반 공격");
+
+            if (SkillPoint == 0) Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            Console.SetCursorPosition(52, 44);
+            Console.WriteLine("[2]");
+            Console.SetCursorPosition(49, 46);
+            Console.WriteLine("전투 스킬");
+
+            Console.ResetColor();
+
+            if (UltimateGage != 10) Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            Console.SetCursorPosition(84, 44);
+            Console.WriteLine("[3]");
+            Console.SetCursorPosition(83, 46);
+            Console.WriteLine("필살기");
+
+            Console.ResetColor();
+
+            Console.SetCursorPosition(13, 52);
         }
 
         static void DrawHit(ICharacter character)
@@ -276,4 +432,5 @@ namespace TextRPG
             character.DrawImage();
         }
     }
+
 }

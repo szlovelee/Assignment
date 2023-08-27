@@ -34,6 +34,7 @@ namespace TextRPG
 
         public Warrior()
         {
+            Console.SetCursorPosition(60, 35);
             Console.Write("Enter Your Name: ");
             string input = Console.ReadLine();
 
